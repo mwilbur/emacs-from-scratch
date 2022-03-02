@@ -85,6 +85,7 @@ You can also use =M-x auto-package-update-now= to update right now!
     (auto-package-update-prompt-before-update t)
     (auto-package-update-hide-results t)
     :config
+    (setq auto-package-update-delete-old-versions t)
     (auto-package-update-maybe)
     (auto-package-update-at-time "09:00"))
 
