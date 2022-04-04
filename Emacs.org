@@ -797,6 +797,8 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
 *** Scheme
 #+begin_src emacs-lisp
   (use-package geiser-guile)
+  (use-package geiser-chez)
+  (use-package paredit)
   (add-hook 'scheme-mode-hook #'paredit-mode)
 #+end_src
 
@@ -805,6 +807,15 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
   (use-package nim-mode)
 #+end_src
 
+*** Haskell
+#+begin_src emacs-lisp
+  (use-package haskell-mode
+    :hook
+    (haskell-mode . lsp-deferred)
+    (haskell-mode . interactive-haskell-mode))
+  (use-package lsp-haskell
+    :init (setq lsp-haskell-server-path (concat (getenv "HOME") "/.cabal/bin/haskell-language-server-wrapper")))
+    #+end_src
 *** CMake
 #+begin_src emacs-lisp
   (use-package cmake-mode)
@@ -822,9 +833,9 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
     :after lsp-mode
     :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
-          (:map lsp-mode-map
-           ("<tab>" . company-indent-or-complete-common))
+                ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-complete-common))
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0))
@@ -894,14 +905,14 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+begin_src emacs-lisp
 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
 
 #+end_src
 
 ** Guix Development
 #+begin_src emacs-lisp
-(use-package guix)
+  (use-package guix)
 
 #+end_src
 
@@ -1113,10 +1124,10 @@ Dired is a built-in file manager for Emacs that does some pretty amazing things!
     :commands (dired dired-jump)
     :bind (("C-x C-j" . dired-jump))
     :custom ((dired-listing-switches "-agho --group-directories-first")))
-    ;; :config
-    ;; (evil-collection-define-key 'normal 'dired-mode-map
-    ;;   "h" 'dired-single-up-directory
-    ;;   "l" 'dired-single-buffer))
+  ;; :config
+  ;; (evil-collection-define-key 'normal 'dired-mode-map
+  ;;   "h" 'dired-single-up-directory
+  ;;   "l" 'dired-single-buffer))
 
   (use-package dired-single
     :commands (dired dired-jump))
@@ -1134,9 +1145,9 @@ Dired is a built-in file manager for Emacs that does some pretty amazing things!
 
   (use-package dired-hide-dotfiles
     :hook (dired-mode . dired-hide-dotfiles-mode))
-    ;; :config
-    ;; (evil-collection-define-key 'normal 'dired-mode-map
-    ;;   "H" 'dired-hide-dotfiles-mode))
+  ;; :config
+  ;; (evil-collection-define-key 'normal 'dired-mode-map
+  ;;   "H" 'dired-hide-dotfiles-mode))
 
 #+end_src
 

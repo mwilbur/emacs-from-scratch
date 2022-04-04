@@ -44,6 +44,7 @@
   (auto-package-update-prompt-before-update t)
   (auto-package-update-hide-results t)
   :config
+  (setq auto-package-update-delete-old-versions t)
   (auto-package-update-maybe)
   (auto-package-update-at-time "09:00"))
 
@@ -95,7 +96,7 @@
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
 
-;; Make ESC quit prompts
+;; ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package general
@@ -214,8 +215,8 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
-(efs/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
+;; (efs/leader-keys
+;;   "ts" '(hydra-text-scale/body :which-key "scale text"))
 
 (defun efs/org-font-setup ()
   ;; Replace list hyphen with dot
@@ -478,13 +479,29 @@
   :config
   (pyvenv-mode 1))
 
+(use-package geiser-guile)
+(use-package geiser-chez)
+(use-package paredit)
+(add-hook 'scheme-mode-hook #'paredit-mode)
+
+(use-package nim-mode)
+
+(use-package haskell-mode
+  :hook
+  (haskell-mode . lsp-deferred)
+  (haskell-mode . interactive-haskell-mode))
+(use-package lsp-haskell
+  :init (setq lsp-haskell-server-path (concat (getenv "HOME") "/.cabal/bin/haskell-language-server-wrapper")))
+
+(use-package cmake-mode)
+
 (use-package company
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
+              ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
@@ -524,6 +541,8 @@
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package guix)
 
 (use-package term
   :commands term
@@ -582,11 +601,11 @@
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-single-up-directory
-    "l" 'dired-single-buffer))
+  :custom ((dired-listing-switches "-agho --group-directories-first")))
+;; :config
+;; (evil-collection-define-key 'normal 'dired-mode-map
+;;   "h" 'dired-single-up-directory
+;;   "l" 'dired-single-buffer))
 
 (use-package dired-single
   :commands (dired dired-jump))
@@ -603,10 +622,10 @@
                                 ("mkv" . "mpv"))))
 
 (use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode)
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "H" 'dired-hide-dotfiles-mode))
+  :hook (dired-mode . dired-hide-dotfiles-mode))
+;; :config
+;; (evil-collection-define-key 'normal 'dired-mode-map
+;;   "H" 'dired-hide-dotfiles-mode))
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
